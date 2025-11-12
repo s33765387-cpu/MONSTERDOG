@@ -38,9 +38,9 @@ import (
 
 const (
 	// Constantes cosmiques
-	BaseFrequency     = 11.987
-	BaseCoherence     = 0.99995
-	UniversalSeed     = 11987
+	BaseFrequency      = 11.987
+	BaseCoherence      = 0.99995
+	UniversalSeed      = 11987
 	SignatureUniversal = "0x5F3759DF-s33765387-FULLTRUTL-Δ-Ω"
 )
 
@@ -146,20 +146,20 @@ func calculateVariance(values []float64) float64 {
 	if len(values) == 0 {
 		return 0.0
 	}
-	
+
 	mean := 0.0
 	for _, v := range values {
 		mean += v
 	}
 	mean /= float64(len(values))
-	
+
 	variance := 0.0
 	for _, v := range values {
 		diff := v - mean
 		variance += diff * diff
 	}
 	variance /= float64(len(values))
-	
+
 	return variance
 }
 
@@ -168,10 +168,10 @@ func findMinMax(values []float64) (float64, float64) {
 	if len(values) == 0 {
 		return 0.0, 0.0
 	}
-	
+
 	min := values[0]
 	max := values[0]
-	
+
 	for _, v := range values[1:] {
 		if v < min {
 			min = v
@@ -180,7 +180,7 @@ func findMinMax(values []float64) (float64, float64) {
 			max = v
 		}
 	}
-	
+
 	return min, max
 }
 
@@ -192,21 +192,21 @@ func roundFloat(val float64, precision int) float64 {
 
 // MonsterDogDaemon représente le daemon MONSTERDOG
 type MonsterDogDaemon struct {
-	engine         *FractalMetricEngine
-	cycleCount     int64
-	running        bool
-	mu             sync.Mutex
-	stateVectors   []StateVector
+	engine          *FractalMetricEngine
+	cycleCount      int64
+	running         bool
+	mu              sync.Mutex
+	stateVectors    []StateVector
 	maxStateVectors int
 }
 
 // NewMonsterDogDaemon crée un nouveau daemon MONSTERDOG
 func NewMonsterDogDaemon() *MonsterDogDaemon {
 	return &MonsterDogDaemon{
-		engine:         NewFractalMetricEngine(UniversalSeed),
-		cycleCount:     0,
-		running:        false,
-		stateVectors:   make([]StateVector, 0),
+		engine:          NewFractalMetricEngine(UniversalSeed),
+		cycleCount:      0,
+		running:         false,
+		stateVectors:    make([]StateVector, 0),
 		maxStateVectors: 1000,
 	}
 }
@@ -303,12 +303,12 @@ func (mdd *MonsterDogDaemon) GetStats() map[string]interface{} {
 	defer mdd.mu.Unlock()
 
 	stats := map[string]interface{}{
-		"cycle_count":      mdd.cycleCount,
-		"running":          mdd.running,
-		"state_vectors":    len(mdd.stateVectors),
-		"signature":        SignatureUniversal,
-		"base_frequency":   BaseFrequency,
-		"base_coherence":   BaseCoherence,
+		"cycle_count":    mdd.cycleCount,
+		"running":        mdd.running,
+		"state_vectors":  len(mdd.stateVectors),
+		"signature":      SignatureUniversal,
+		"base_frequency": BaseFrequency,
+		"base_coherence": BaseCoherence,
 	}
 
 	return stats
@@ -318,10 +318,10 @@ func main() {
 	fmt.Println("[INFO] Initializing MONSTERDOG V_FINALITY_Ω (Go Implementation)...")
 
 	daemon := NewMonsterDogDaemon()
-	
+
 	// Exécuter 100 cycles avec un intervalle de 1 seconde
 	daemon.Run(1*time.Second, 100)
-	
+
 	// Afficher les statistiques finales
 	stats := daemon.GetStats()
 	statsJSON, _ := json.MarshalIndent(stats, "", "  ")
