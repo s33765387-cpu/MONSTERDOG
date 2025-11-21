@@ -7,13 +7,13 @@ setup(
     author="Samuel Cloutier (ZORG-MASTER)",
     packages=find_packages(),
     install_requires=[
-        "fastapi",
-        "uvicorn",
-        "psutil",
-        "pandas",
-        "numpy",
-        "pydantic",
-        "websockets"
+        "fastapi>=0.104.0",
+        "uvicorn[standard]>=0.24.0",
+        "psutil>=5.9.0",
+        "pandas>=2.0.0",
+        "numpy>=1.24.0",
+        "pydantic>=2.0.0",
+        "websockets>=12.0"
     ],
     entry_points={
         "console_scripts": [

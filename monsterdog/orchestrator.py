@@ -88,7 +88,7 @@ async def broadcast(message: str):
     for connection in active_connections:
         try:
             await connection.send_text(message)
-        except:
+        except Exception as e:
             disconnected.append(connection)
     
     # Nettoyage des connexions mortes
