@@ -4,7 +4,10 @@
 *.dll
 *.so
 *.dylib
-monsterdog
+# Go binary (not the Python package directory)
+/monsterdog
+!monsterdog/
+monsterdog.exe
 
 # Test binary, built with `go test -c`
 *.test
