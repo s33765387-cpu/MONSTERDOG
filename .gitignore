@@ -4,7 +4,10 @@
 *.dll
 *.so
 *.dylib
-monsterdog
+# Go binary (not the Python package directory)
+/monsterdog
+!monsterdog/
+monsterdog.exe
 
 # Test binary, built with `go test -c`
 *.test
@@ -28,3 +31,44 @@ vendor/
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# PyTest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
