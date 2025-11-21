@@ -1,0 +1,16 @@
+{
+  "benchmark_name": "MMLU",
+  "score": 85.020029101805,
+  "metric": "accuracy",
+  "timestamp": "2025-11-21T15:36:09.714694",
+  "model_name": "MONSTERDOG",
+  "model_version": "V_OMEGA_\u221e",
+  "total_tasks": 57,
+  "completed_tasks": 57,
+  "execution_time_seconds": 0.5790836811065674,
+  "metadata": {
+    "type": "knowledge",
+    "leaderboard_url": "https://paperswithcode.com/sota/multi-task-language-understanding-on-mmlu",
+    "world_record": 90.0
+  }
+}

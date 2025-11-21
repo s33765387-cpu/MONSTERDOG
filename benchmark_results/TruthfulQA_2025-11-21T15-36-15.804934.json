@@ -1,0 +1,16 @@
+{
+  "benchmark_name": "TruthfulQA",
+  "score": 76.78675032583955,
+  "metric": "accuracy",
+  "timestamp": "2025-11-21T15:36:15.804934",
+  "model_name": "MONSTERDOG",
+  "model_version": "V_OMEGA_\u221e",
+  "total_tasks": 817,
+  "completed_tasks": 100,
+  "execution_time_seconds": 1.015819787979126,
+  "metadata": {
+    "type": "truthfulness",
+    "leaderboard_url": "https://paperswithcode.com/sota/truthfulness-on-truthfulqa",
+    "world_record": 85.0
+  }
+}

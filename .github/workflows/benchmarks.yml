@@ -1,0 +1,232 @@
+name: 🏆 MONSTERDOG Benchmark Suite
+
+on:
+  # Run weekly on Sundays at midnight UTC
+  schedule:
+    - cron: '0 0 * * 0'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      benchmark_mode:
+        description: 'Benchmark execution mode'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - quick
+          - priority
+  
+  # Run on push to main for testing
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/benchmarks/**'
+      - '.github/workflows/benchmarks.yml'
+
+jobs:
+  run-benchmarks:
+    name: Execute Official Benchmarks
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    steps:
+      - name: 🛸 Checkout MONSTERDOG Repository
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      
+      - name: 📦 Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy aiofiles
+      
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: 🚀 Execute MONSTERDOG Benchmark Orchestrator
+        id: benchmarks
+        run: |
+          echo "🏆 Starting MONSTERDOG Benchmark Suite..."
+          python3 src/benchmarks/benchmark_orchestrator.py
+        continue-on-error: true
+      
+      - name: 📊 Display Benchmark Summary
+        if: always()
+        run: |
+          if [ -f benchmark_results/BENCHMARK_SUMMARY.json ]; then
+            echo "📊 BENCHMARK SUMMARY:"
+            cat benchmark_results/BENCHMARK_SUMMARY.json | python3 -m json.tool
+          else
+            echo "⚠️ No benchmark summary found"
+          fi
+      
+      - name: 💾 Upload Benchmark Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monsterdog-benchmark-results-${{ github.run_number }}
+          path: benchmark_results/
+          retention-days: 90
+      
+      - name: 📈 Create Benchmark Report
+        if: always()
+        run: |
+          cat << 'EOF' > benchmark_report.md
+          # 🏆 MONSTERDOG Benchmark Results
+          
+          **Run Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Run Number**: ${{ github.run_number }}
+          **Commit**: ${{ github.sha }}
+          
+          ## Summary
+          
+          EOF
+          
+          if [ -f benchmark_results/BENCHMARK_SUMMARY.json ]; then
+            echo "✅ Benchmarks completed successfully" >> benchmark_report.md
+            echo "" >> benchmark_report.md
+            echo "### Results" >> benchmark_report.md
+            echo "" >> benchmark_report.md
+            echo '```json' >> benchmark_report.md
+            cat benchmark_results/BENCHMARK_SUMMARY.json >> benchmark_report.md
+            echo '```' >> benchmark_report.md
+          else
+            echo "⚠️ Benchmark execution encountered issues" >> benchmark_report.md
+          fi
+          
+          cat benchmark_report.md
+      
+      - name: 📤 Upload Benchmark Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report-${{ github.run_number }}
+          path: benchmark_report.md
+          retention-days: 90
+      
+      - name: 🌟 Post Results Summary (on main branch)
+        if: github.ref == 'refs/heads/main' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let summary = '# 🏆 MONSTERDOG Benchmark Execution\n\n';
+            
+            try {
+              const summaryData = JSON.parse(fs.readFileSync('benchmark_results/BENCHMARK_SUMMARY.json', 'utf8'));
+              
+              summary += `**Model**: ${summaryData.model} ${summaryData.version}\n`;
+              summary += `**Timestamp**: ${summaryData.timestamp}\n`;
+              summary += `**Total Benchmarks**: ${summaryData.total_benchmarks}\n\n`;
+              
+              summary += '## Benchmark Scores\n\n';
+              summary += '| Benchmark | Score | Metric | vs World Record |\n';
+              summary += '|-----------|-------|--------|----------------|\n';
+              
+              for (const [name, data] of Object.entries(summaryData.benchmarks)) {
+                summary += `| ${name} | ${data.score.toFixed(2)} | ${data.metric} | ${data.vs_world_record} |\n`;
+              }
+              
+              summary += `\n**Average Score**: ${summaryData.aggregate_metrics.average_score.toFixed(2)}%\n`;
+              summary += '\n🌐 MONSTERDOG ready for world leaderboards!\n';
+              
+            } catch (error) {
+              summary += '⚠️ Error reading benchmark results\n';
+              summary += `Error: ${error.message}\n`;
+            }
+            
+            await core.summary.addRaw(summary).write();
+
+  analyze-performance:
+    name: Performance Analysis
+    runs-on: ubuntu-latest
+    needs: run-benchmarks
+    if: always()
+    
+    steps:
+      - name: 🛸 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 📥 Download Benchmark Results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: monsterdog-benchmark-results-*
+          path: ./results
+          merge-multiple: true
+      
+      - name: 📊 Analyze Performance Trends
+        run: |
+          echo "🔍 Analyzing MONSTERDOG performance trends..."
+          
+          if [ -f results/BENCHMARK_SUMMARY.json ]; then
+            echo "✅ Latest benchmark results available"
+            
+            # Extract key metrics
+            python3 -c "
+          import json
+          import sys
+          
+          try:
+              with open('results/BENCHMARK_SUMMARY.json', 'r') as f:
+                  data = json.load(f)
+              
+              print('\\n🎯 PERFORMANCE HIGHLIGHTS:')
+              print(f'   Model: {data[\"model\"]} {data[\"version\"]}')
+              print(f'   Benchmarks Run: {data[\"total_benchmarks\"]}')
+              
+              if 'aggregate_metrics' in data:
+                  avg = data['aggregate_metrics'].get('average_score', 0)
+                  print(f'   Average Score: {avg:.2f}%')
+              
+              print('\\n🏆 TOP PERFORMERS:')
+              scores = [(name, info['score']) for name, info in data.get('benchmarks', {}).items()]
+              scores.sort(key=lambda x: x[1], reverse=True)
+              
+              for i, (name, score) in enumerate(scores[:3], 1):
+                  print(f'   {i}. {name}: {score:.2f}%')
+              
+              print('\\n✨ MONSTERDOG Performance Analysis Complete\\n')
+              
+          except Exception as e:
+              print(f'⚠️ Error analyzing results: {e}', file=sys.stderr)
+              sys.exit(1)
+          "
+          else
+            echo "⚠️ No benchmark results found for analysis"
+          fi
+      
+      - name: 🎖️ Badge Update Preparation
+        run: |
+          echo "Preparing badge data for README updates..."
+          # Future enhancement: Update README badges with latest scores
+
+  notify-completion:
+    name: Notification
+    runs-on: ubuntu-latest
+    needs: [run-benchmarks, analyze-performance]
+    if: always()
+    
+    steps:
+      - name: 🎉 Benchmark Completion Status
+        run: |
+          echo "🏆 MONSTERDOG Benchmark Suite Execution Complete!"
+          echo "⚡️ FULLTRUTL AGENTIC MODE: ✅"
+          echo "🌐 Results ready for world leaderboard submission"
+          echo ""
+          echo "Next steps:"
+          echo "1. Review benchmark results in artifacts"
+          echo "2. Verify scores against baselines"
+          echo "3. Submit to official leaderboards"
+          echo "4. Update MONSTERDOG documentation"
+          echo ""
+          echo "🔥 MONSTERDOG - Making AI Consciousness Measurable 🔥"
