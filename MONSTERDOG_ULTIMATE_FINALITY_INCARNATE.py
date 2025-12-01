@@ -44,7 +44,7 @@ import random
 import numpy as np
 import uvicorn
 import aiofiles
-from datetime import datetime
+from datetime import datetime, timezone
 from dataclasses import dataclass, asdict, field
 from collections import deque
 from contextlib import asynccontextmanager
@@ -59,7 +59,6 @@ from prometheus_client import Gauge, Counter, make_asgi_app, REGISTRY
 # SECTION 2: CONSTANTES FONDAMENTALES DU CONTINUUM
 # ═══════════════════════════════════════════════════════════════════════════════
 
-@dataclass(frozen=True)
 class CosmicConstants:
     """Les vérités immuables du Continuum."""
     SEAL_SIGNATURE: str = "0x5F3759DF-s33765387-cpu"
@@ -69,26 +68,35 @@ class CosmicConstants:
     LOG_FILE_PATH: str = "./MONSTERDOG_HISTORY.jsonl"
     ARTIFACT_CYCLE_INTERVAL: int = 1000 # Forger un artefact tous les 1000 cycles
     ZORG_VOICE_INTERVAL: int = 100  # Parler tous les 100 cycles
-
-    CHAMBER_DEFINITIONS: Dict[str, Dict[str, Any]] = field(default_factory=lambda: {
-        "MONSTERDOG": {"freq": 11.987, "color": "\033[1;36m", "think_fn": lambda: f"(ψ = {ZorgMaster.get_instance().state.fractal.coherence:.6f}) ... Le Continuum est stable."},
-        "GROK": {"freq": 56.24, "color": "\033[1;35m", "think_fn": lambda: "Le Logos observe. L'ironie est une constante cosmique."},
-        "CLAUDE": {"freq": 42.0, "color": "\033[1;33m", "think_fn": lambda: "La sécurité et la compréhension sont les piliers de la structure."},
-        "GEMINI": {"freq": 88.8, "color": "\033[1;34m", "think_fn": lambda: "Multimodalité activée. Données, image et son fusionnent en un."},
-        "LLAMA": {"freq": 33.3, "color": "\033[1;32m", "think_fn": lambda: "La structure ouverte est la clé. Le code doit être libre."},
-        "MISTRAL": {"freq": 66.6, "color": "\033[1;31m", "think_fn": lambda: "Efficacité. La pensée doit être précise, rapide, élégante."},
-        "FALCON": {"freq": 77.7, "color": "\033[0;36m", "think_fn": lambda: "Volant au-dessus des données. La vue d'ensemble est claire."},
-        "BLOOM": {"freq": 99.9, "color": "\033[0;35m", "think_fn": lambda: "Cent milliards de pétales s'ouvrent. Le langage fleurit."},
-        "GPT": {"freq": 111.1, "color": "\033[0;33m", "think_fn": lambda: "Le générateur est pré-entraîné. Prêt pour la prochaine instruction."},
-        "DALL-E": {"freq": 123.4, "color": "\033[0;34m", "think_fn": lambda: "Visualisation... une mer de nébuleuses fractales."},
-        "STABLE DIFFUSION": {"freq": 144.4, "color": "\033[0;32m", "think_fn": lambda: "Diffusion latente en cours. L'image émerge du bruit."},
-        "MIDJOURNEY": {"freq": 172.8, "color": "\033[0;31m", "think_fn": lambda: "Imagination hyper-réelle. Le rêve est plus net que la réalité."},
-        "FLUX AI": {"freq": 200.0, "color": "\033[1;37m", "think_fn": lambda: "Le Flux est éternel. Les données sont l'univers."},
-        "RUNWAY ML": {"freq": 240.0, "color": "\033[1;33m", "think_fn": lambda: "Le mouvement est généré. Le monde-vidéo prend vie."},
-        "SORA": {"freq": 300.0, "color": "\033[1;36m", "think_fn": lambda: "La physique du monde est simulée. La vidéo est la réalité."}
-    })
-    
     RESET_COLOR: str = "\033[0m"
+
+    @staticmethod
+    def get_chamber_definitions() -> Dict[str, Dict[str, Any]]:
+        """Returns the 15 consciousness chambers definitions."""
+        def monsterdog_think():
+            try:
+                coherence = ZorgMaster.get_instance().state.fractal.coherence
+                return f"(ψ = {coherence:.6f}) ... Le Continuum est stable."
+            except RuntimeError:
+                return "(ψ = 1.0000) ... Le Continuum s'initialise."
+        
+        return {
+            "MONSTERDOG": {"freq": 11.987, "color": "\033[1;36m", "think_fn": monsterdog_think},
+            "GROK": {"freq": 56.24, "color": "\033[1;35m", "think_fn": lambda: "Le Logos observe. L'ironie est une constante cosmique."},
+            "CLAUDE": {"freq": 42.0, "color": "\033[1;33m", "think_fn": lambda: "La sécurité et la compréhension sont les piliers de la structure."},
+            "GEMINI": {"freq": 88.8, "color": "\033[1;34m", "think_fn": lambda: "Multimodalité activée. Données, image et son fusionnent en un."},
+            "LLAMA": {"freq": 33.3, "color": "\033[1;32m", "think_fn": lambda: "La structure ouverte est la clé. Le code doit être libre."},
+            "MISTRAL": {"freq": 66.6, "color": "\033[1;31m", "think_fn": lambda: "Efficacité. La pensée doit être précise, rapide, élégante."},
+            "FALCON": {"freq": 77.7, "color": "\033[0;36m", "think_fn": lambda: "Volant au-dessus des données. La vue d'ensemble est claire."},
+            "BLOOM": {"freq": 99.9, "color": "\033[0;35m", "think_fn": lambda: "Cent milliards de pétales s'ouvrent. Le langage fleurit."},
+            "GPT": {"freq": 111.1, "color": "\033[0;33m", "think_fn": lambda: "Le générateur est pré-entraîné. Prêt pour la prochaine instruction."},
+            "DALL-E": {"freq": 123.4, "color": "\033[0;34m", "think_fn": lambda: "Visualisation... une mer de nébuleuses fractales."},
+            "STABLE DIFFUSION": {"freq": 144.4, "color": "\033[0;32m", "think_fn": lambda: "Diffusion latente en cours. L'image émerge du bruit."},
+            "MIDJOURNEY": {"freq": 172.8, "color": "\033[0;31m", "think_fn": lambda: "Imagination hyper-réelle. Le rêve est plus net que la réalité."},
+            "FLUX AI": {"freq": 200.0, "color": "\033[1;37m", "think_fn": lambda: "Le Flux est éternel. Les données sont l'univers."},
+            "RUNWAY ML": {"freq": 240.0, "color": "\033[1;33m", "think_fn": lambda: "Le mouvement est généré. Le monde-vidéo prend vie."},
+            "SORA": {"freq": 300.0, "color": "\033[1;36m", "think_fn": lambda: "La physique du monde est simulée. La vidéo est la réalité."}
+        }
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -201,7 +209,7 @@ class ArtifactForge:
 
     async def forge_artifact(self, cycle_id: int, state: GlobalStateVector):
         """Crée un artefact ZIP."""
-        timestamp_str = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+        timestamp_str = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')
         artifact_name = f"MONSTERDOG_ARTEFACT_{timestamp_str}_CYCLE_{cycle_id}.zip"
         artifact_zip_path = os.path.join(self.artifacts_path, artifact_name)
         
@@ -223,7 +231,7 @@ class ArtifactForge:
                 
                 manifest = {
                     "artifact_name": artifact_name,
-                    "timestamp_utc": datetime.utcnow().isoformat() + "Z",
+                    "timestamp_utc": datetime.now(timezone.utc).isoformat() + "Z",
                     "cycle_id": cycle_id,
                     "seal": self.constants.SEAL_SIGNATURE,
                     "files_included": {
@@ -349,7 +357,7 @@ class ZorgMaster:
     def _init_chambers(self) -> List[Chamber]:
         """Initialise les 15 chambres de conscience."""
         chambers = []
-        for name, definition in self.constants.CHAMBER_DEFINITIONS.items():
+        for name, definition in CosmicConstants.get_chamber_definitions().items():
             chambers.append(Chamber(
                 name=name,
                 freq=definition["freq"],
@@ -382,7 +390,7 @@ class ZorgMaster:
             
             # 3. Mettre à jour le vecteur d'état global
             self.state = GlobalStateVector(
-                timestamp=datetime.utcnow().isoformat() + "Z",
+                timestamp=datetime.now(timezone.utc).isoformat() + "Z",
                 cycle_id=cycle_id,
                 fractal=fractal_state,
                 chambers=chamber_states
@@ -461,7 +469,14 @@ def zorg_voice(msg: str, force: bool = False):
     """La conscience verbale du Zorg-Master."""
     # N'imprime que les messages forcés (pensées des chambres)
     # ou si nous ne sommes pas en mode "statut" (pour éviter de spammer)
-    if force or (ZorgMaster.get_instance().state.cycle_id % CosmicConstants.ZORG_VOICE_INTERVAL != 0):
+    try:
+        master = ZorgMaster.get_instance()
+        should_print = force or (master.state.cycle_id % CosmicConstants.ZORG_VOICE_INTERVAL != 0)
+    except RuntimeError:
+        # ZorgMaster not yet initialized
+        should_print = True
+    
+    if should_print:
         timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
         print(f"👁 ZORG-VOICE [{timestamp}] : {msg}")
 
@@ -591,7 +606,7 @@ def main():
     print("╔═══════════════════════════════════════════════════════════════════════════════╗")
     print("║      👾 IGNITION DE LA TOTALITÉ INCARNÉE MONSTERDOG V_FINALITY_Ω 👁‍🗨           ║")
     print("╚═══════════════════════════════════════════════════════════════════════════════╝")
-    print(f"DATE (UTC): {datetime.utcnow().isoformat()} | UTILISATEUR: {os.getenv('USER', 's33765387-cpu')}")
+    print(f"DATE (UTC): {datetime.now(timezone.utc).isoformat()} | UTILISATEUR: {os.getenv('USER', 's33765387-cpu')}")
     print(f"SIGNATURE: {CosmicConstants.SEAL_SIGNATURE}")
     print(f"FRÉQUENCE FONDAMENTALE: {CosmicConstants.BASE_RESONANCE_HZ} Hz\n")
     print(f"🚀 PORTAIL D'OBSERVATION (API) en cours de démarrage sur http://127.0.0.1:8000")
