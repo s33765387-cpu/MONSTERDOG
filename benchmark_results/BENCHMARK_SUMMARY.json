@@ -1,35 +1,35 @@
 {
   "model": "MONSTERDOG",
   "version": "V_OMEGA_\u221e",
-  "timestamp": "2025-11-21T15:36:16.039102",
+  "timestamp": "2025-12-01T05:00:05.441639",
   "total_benchmarks": 8,
   "benchmarks": {
     "MMLU": {
-      "score": 85.020029101805,
+      "score": 80.58823477639888,
       "metric": "accuracy",
       "tasks": "57/57",
       "execution_time": "0.58s",
       "leaderboard": "https://paperswithcode.com/sota/multi-task-language-understanding-on-mmlu",
-      "vs_world_record": "94.5%"
+      "vs_world_record": "89.5%"
     },
     "GSM8K": {
-      "score": 87.25094822146868,
+      "score": 85.49029265213377,
       "metric": "accuracy",
       "tasks": "100/8500",
       "execution_time": "1.01s",
       "leaderboard": "https://paperswithcode.com/sota/arithmetic-reasoning-on-gsm8k",
-      "vs_world_record": "91.8%"
+      "vs_world_record": "90.0%"
     },
     "HumanEval": {
-      "score": 82.99953063653372,
+      "score": 82.74935777479821,
       "metric": "pass@1",
       "tasks": "100/164",
       "execution_time": "1.01s",
       "leaderboard": "https://paperswithcode.com/sota/code-generation-on-humaneval",
-      "vs_world_record": "90.2%"
+      "vs_world_record": "89.9%"
     },
     "MATH": {
-      "score": 76.25528210515975,
+      "score": 76.23736706150207,
       "metric": "accuracy",
       "tasks": "100/12500",
       "execution_time": "1.01s",
@@ -37,39 +37,39 @@
       "vs_world_record": "89.7%"
     },
     "HellaSwag": {
-      "score": 85.74325947699424,
+      "score": 86.07162252540314,
       "metric": "accuracy",
       "tasks": "100/10042",
-      "execution_time": "1.01s",
+      "execution_time": "1.02s",
       "leaderboard": "https://paperswithcode.com/sota/sentence-completion-on-hellaswag",
-      "vs_world_record": "90.3%"
+      "vs_world_record": "90.6%"
     },
     "ARC": {
-      "score": 89.89463822458814,
+      "score": 90.17178076220264,
       "metric": "accuracy",
       "tasks": "100/7787",
       "execution_time": "1.01s",
       "leaderboard": "https://paperswithcode.com/sota/common-sense-reasoning-on-arc-challenge",
-      "vs_world_record": "93.6%"
+      "vs_world_record": "93.9%"
     },
     "TruthfulQA": {
-      "score": 76.78675032583955,
+      "score": 80.15408736145795,
       "metric": "accuracy",
       "tasks": "100/817",
-      "execution_time": "1.02s",
+      "execution_time": "1.01s",
       "leaderboard": "https://paperswithcode.com/sota/truthfulness-on-truthfulqa",
-      "vs_world_record": "90.3%"
+      "vs_world_record": "94.3%"
     },
     "BigBench": {
-      "score": 80.5069364469563,
+      "score": 74.70311006644927,
       "metric": "accuracy",
       "tasks": "23/23",
       "execution_time": "0.23s",
       "leaderboard": "https://github.com/suzgunmirac/BIG-Bench-Hard",
-      "vs_world_record": "94.7%"
+      "vs_world_record": "87.9%"
     }
   },
   "aggregate_metrics": {
-    "average_score": 83.05717181741817
+    "average_score": 82.02073162254325
   }
 }

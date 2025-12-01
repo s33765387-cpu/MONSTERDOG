@@ -6,50 +6,50 @@
     {
       "dataset": "MMLU",
       "metric": "accuracy",
-      "value": 85.020029101805,
-      "evaluated_on": "2025-11-21T15:36:09.714694"
+      "value": 80.58823477639888,
+      "evaluated_on": "2025-12-01T04:59:59.117807"
     },
     {
       "dataset": "GSM8K",
       "metric": "accuracy",
-      "value": 87.25094822146868,
-      "evaluated_on": "2025-11-21T15:36:10.729073"
+      "value": 85.49029265213377,
+      "evaluated_on": "2025-12-01T05:00:00.131994"
     },
     {
       "dataset": "HumanEval",
       "metric": "pass@1",
-      "value": 82.99953063653372,
-      "evaluated_on": "2025-11-21T15:36:11.744213"
+      "value": 82.74935777479821,
+      "evaluated_on": "2025-12-01T05:00:01.146893"
     },
     {
       "dataset": "MATH",
       "metric": "accuracy",
-      "value": 76.25528210515975,
-      "evaluated_on": "2025-11-21T15:36:12.759006"
+      "value": 76.23736706150207,
+      "evaluated_on": "2025-12-01T05:00:02.161290"
     },
     {
       "dataset": "HellaSwag",
       "metric": "accuracy",
-      "value": 85.74325947699424,
-      "evaluated_on": "2025-11-21T15:36:13.773631"
+      "value": 86.07162252540314,
+      "evaluated_on": "2025-12-01T05:00:03.178761"
     },
     {
       "dataset": "ARC",
       "metric": "accuracy",
-      "value": 89.89463822458814,
-      "evaluated_on": "2025-11-21T15:36:14.788735"
+      "value": 90.17178076220264,
+      "evaluated_on": "2025-12-01T05:00:04.193179"
     },
     {
       "dataset": "TruthfulQA",
       "metric": "accuracy",
-      "value": 76.78675032583955,
-      "evaluated_on": "2025-11-21T15:36:15.804934"
+      "value": 80.15408736145795,
+      "evaluated_on": "2025-12-01T05:00:05.207718"
     },
     {
       "dataset": "BigBench",
       "metric": "accuracy",
-      "value": 80.5069364469563,
-      "evaluated_on": "2025-11-21T15:36:16.038774"
+      "value": 74.70311006644927,
+      "evaluated_on": "2025-12-01T05:00:05.441302"
     }
   ]
 }
