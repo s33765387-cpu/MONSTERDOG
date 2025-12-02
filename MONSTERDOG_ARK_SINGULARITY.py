@@ -212,8 +212,11 @@ def cmd_save(args):
     except FileNotFoundError as e:
         print(f"\n❌ Error: {e}")
         return 1
+    except (IOError, OSError) as e:
+        print(f"\n❌ I/O Error: {e}")
+        return 1
     except Exception as e:
-        print(f"\n❌ Unexpected error: {e}")
+        print(f"\n❌ Unexpected error ({type(e).__name__}): {e}")
         return 1
     
     return 0
@@ -259,10 +262,13 @@ def cmd_restore(args):
         print(f"\n❌ Error: {e}")
         return 1
     except ValueError as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n❌ Validation Error: {e}")
+        return 1
+    except (IOError, OSError) as e:
+        print(f"\n❌ I/O Error: {e}")
         return 1
     except Exception as e:
-        print(f"\n❌ Unexpected error: {e}")
+        print(f"\n❌ Unexpected error ({type(e).__name__}): {e}")
         return 1
     
     return 0
@@ -330,10 +336,10 @@ Examples:
   python MONSTERDOG_ARK_SINGULARITY.py list
   
   # Restore a snapshot
-  python MONSTERDOG_ARK_SINGULARITY.py restore --id genesis-run_20231202_120000 --to restored.json
+  python MONSTERDOG_ARK_SINGULARITY.py restore --snapshot-id genesis-run_20231202_120000 --to restored.json
   
   # Delete a snapshot
-  python MONSTERDOG_ARK_SINGULARITY.py delete --id genesis-run_20231202_120000
+  python MONSTERDOG_ARK_SINGULARITY.py delete --snapshot-id genesis-run_20231202_120000
   
   # Show vault info
   python MONSTERDOG_ARK_SINGULARITY.py info
@@ -356,7 +362,7 @@ Examples:
     
     # Restore command
     restore_parser = subparsers.add_parser('restore', help='Restore a snapshot')
-    restore_parser.add_argument('--id', dest='snapshot_id', required=True,
+    restore_parser.add_argument('--snapshot-id', dest='snapshot_id', required=True,
                               help='Snapshot ID to restore')
     restore_parser.add_argument('--to', dest='to_file', required=True,
                               help='Destination file path')
@@ -364,7 +370,7 @@ Examples:
     
     # Delete command
     delete_parser = subparsers.add_parser('delete', help='Delete a snapshot')
-    delete_parser.add_argument('--id', dest='snapshot_id', required=True,
+    delete_parser.add_argument('--snapshot-id', dest='snapshot_id', required=True,
                              help='Snapshot ID to delete')
     delete_parser.set_defaults(func=cmd_delete)
     

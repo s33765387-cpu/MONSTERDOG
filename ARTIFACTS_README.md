@@ -107,10 +107,10 @@ python3 MONSTERDOG_ARK_SINGULARITY.py list
 python3 MONSTERDOG_ARK_SINGULARITY.py info
 
 # Restore a snapshot
-python3 MONSTERDOG_ARK_SINGULARITY.py restore --id snapshot_id --to restored.json
+python3 MONSTERDOG_ARK_SINGULARITY.py restore --snapshot-id snapshot_id --to restored.json
 
 # Delete a snapshot
-python3 MONSTERDOG_ARK_SINGULARITY.py delete --id snapshot_id
+python3 MONSTERDOG_ARK_SINGULARITY.py delete --snapshot-id snapshot_id
 ```
 
 **Vault Structure:**
