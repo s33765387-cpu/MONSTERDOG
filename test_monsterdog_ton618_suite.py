@@ -17,10 +17,17 @@
 import sys
 import json
 import os
+import tempfile
 from pathlib import Path
 
 # Test results collector
 test_results = []
+
+# Create a temporary directory for test files
+TEST_DIR = Path(tempfile.mkdtemp(prefix="monsterdog_test_"))
+
+# Expected signature constant
+EXPECTED_SIGNATURE = "0x5F3759DF-s33765387-cpu-V\u03a9\u03a9\u03a9\u03a9-SUPREME"  # Using Unicode escape
 
 def test_result(name: str, passed: bool, message: str = ""):
     """Record a test result."""
@@ -98,8 +105,8 @@ def test_totality_core():
         test_result("Unity index range", True, f"Unity={unity:.4f}")
         
         # Test state save
-        test_path = "/tmp/test_totality_state.json"
-        core.save_state(test_path)
+        test_path = TEST_DIR / "test_totality_state.json"
+        core.save_state(str(test_path))
         assert os.path.exists(test_path)
         test_result("State persistence", True, "State saved successfully")
         
@@ -155,8 +162,8 @@ def test_proof_of_dominance():
         test_result("Proof structure validation", True, "All fields present")
         
         # Test proof persistence
-        test_path = "/tmp/test_proof.json"
-        prover.save_proof(proof, test_path)
+        test_path = TEST_DIR / "test_proof.json"
+        prover.save_proof(proof, str(test_path))
         assert os.path.exists(test_path)
         test_result("Proof persistence", True, "Proof saved successfully")
         
@@ -213,8 +220,8 @@ def test_supreme_incarnation():
         test_result("State retrieval", True, "Full state accessible")
         
         # Test artifact forging
-        test_path = "/tmp/test_vomega_state.json"
-        orchestrator.forge_supreme_artifact(test_path)
+        test_path = TEST_DIR / "test_vomega_state.json"
+        orchestrator.forge_supreme_artifact(str(test_path))
         assert os.path.exists(test_path)
         test_result("Artifact forging", True, "Artifact created successfully")
         
@@ -222,7 +229,8 @@ def test_supreme_incarnation():
         with open(test_path, 'r') as f:
             artifact = json.load(f)
         assert 'signature' in artifact
-        assert artifact['signature'] == "0x5F3759DF-s33765387-cpu-VΩΩΩΩ-SUPREME"
+        # Use Unicode escape for comparison
+        assert artifact['signature'] == EXPECTED_SIGNATURE
         test_result("Artifact validation", True, "Signature verified")
         
         return True
@@ -251,7 +259,12 @@ def test_benchmark_dashboard():
         assert "11.987" in html_content
         test_result("Dashboard contains resonance frequency", True)
         
-        assert "ψΩ" in html_content or "psi" in html_content.lower()
+        # Check for psi-omega symbols (check both raw Unicode and HTML entities)
+        has_psi_omega = ("ψΩ" in html_content or 
+                        "psi" in html_content.lower() or
+                        "&psi;" in html_content or
+                        "&#968;" in html_content)
+        assert has_psi_omega
         test_result("Dashboard contains consciousness symbols", True)
         
         # Check HTML structure
@@ -299,12 +312,15 @@ def test_integration():
         test_result("Cross-component operation", True, "Components work together")
         
         # Test file outputs compatibility
-        core.save_state("/tmp/integration_core.json")
-        prover.save_proof(proof, "/tmp/integration_proof.json")
+        core_path = TEST_DIR / "integration_core.json"
+        proof_path = TEST_DIR / "integration_proof.json"
+        
+        core.save_state(str(core_path))
+        prover.save_proof(proof, str(proof_path))
         
         # Verify both files exist
-        assert os.path.exists("/tmp/integration_core.json")
-        assert os.path.exists("/tmp/integration_proof.json")
+        assert os.path.exists(core_path)
+        assert os.path.exists(proof_path)
         test_result("Concurrent file operations", True, "No conflicts")
         
         return True
@@ -360,21 +376,31 @@ def main():
 ╚═══════════════════════════════════════════════════════════════════════════════╝
     """)
     
-    # Run all test suites
-    all_passed = True
+    try:
+        # Run all test suites
+        all_passed = True
+        
+        all_passed &= test_imports()
+        all_passed &= test_totality_core()
+        all_passed &= test_proof_of_dominance()
+        all_passed &= test_supreme_incarnation()
+        all_passed &= test_benchmark_dashboard()
+        all_passed &= test_integration()
+        
+        # Print summary
+        success = print_summary()
+        
+        # Exit with appropriate code
+        sys.exit(0 if success else 1)
     
-    all_passed &= test_imports()
-    all_passed &= test_totality_core()
-    all_passed &= test_proof_of_dominance()
-    all_passed &= test_supreme_incarnation()
-    all_passed &= test_benchmark_dashboard()
-    all_passed &= test_integration()
-    
-    # Print summary
-    success = print_summary()
-    
-    # Exit with appropriate code
-    sys.exit(0 if success else 1)
+    finally:
+        # Cleanup test directory
+        import shutil
+        try:
+            shutil.rmtree(TEST_DIR, ignore_errors=True)
+            print(f"🧹 Cleaned up test directory: {TEST_DIR}")
+        except Exception as e:
+            print(f"⚠️  Could not clean up test directory: {e}")
 
 if __name__ == "__main__":
     main()
