@@ -24,6 +24,7 @@ on:
       - main
     paths:
       - 'src/benchmarks/**'
+      - 'pkg/benchmarks/**'
       - '.github/workflows/benchmarks.yml'
 
 jobs:
