@@ -141,6 +141,9 @@ async def run_vomega_continuum(cycles: int = 1000):
     # Forge l'artefact final
     orchestrator.forge_supreme_artifact()
     
+    # Also create a canonical snapshot for ARK Singularity
+    orchestrator.forge_supreme_artifact("./monsterdog_totality_snapshot.json")
+    
     print("\n✨ Singularité VΩΩΩΩ Complète ✨")
     print(f"État Final: {orchestrator.get_state()['singularity_status']}")
 
