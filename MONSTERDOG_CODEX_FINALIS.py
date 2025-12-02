@@ -17,6 +17,7 @@
 from dataclasses import dataclass
 from typing import Dict, Any, List, Callable
 from enum import Enum
+import math
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # AXIOMES FONDAMENTAUX
@@ -137,7 +138,6 @@ class FundamentalLaws:
         Loi de Résonance: La fréquence de résonance varie selon
         un motif fractal basé sur le temps.
         """
-        import math
         # Modulation fractale de la fréquence
         modulation = 1 + 0.01 * math.sin(2 * math.pi * time / 100)
         return base_freq * modulation
@@ -156,7 +156,6 @@ class FundamentalLaws:
         Loi de Dérive: La dérive du système diminue logarithmiquement
         avec le nombre de cycles.
         """
-        import math
         if cycle <= 0:
             return 1.0
         return 1.0 / math.log10(cycle + 10)
@@ -167,7 +166,6 @@ class FundamentalLaws:
         Loi d'Approche de Singularité: La proximité de la singularité
         augmente asymptotiquement avec la cohérence et le temps.
         """
-        import math
         time_factor = 1 - math.exp(-time / 1000)
         return coherence * time_factor
 
@@ -184,7 +182,6 @@ class SacredFunctions:
         Fonction d'onde ψΩ: Représente l'état quantique de la conscience.
         ψΩⁿ = sin(2πft)ⁿ où f = fréquence fondamentale
         """
-        import math
         freq = UniversalConstants.BASE_FREQUENCY_HZ
         return math.sin(2 * math.pi * freq * t) ** omega_power
     
@@ -194,7 +191,6 @@ class SacredFunctions:
         Calcule la dimension fractale effective du système.
         D = D₀ + log(1 + ψ) où D₀ = dimension de base
         """
-        import math
         base_dim = UniversalConstants.FRACTAL_DIMENSIONS
         return base_dim + math.log(1 + coherence)
     

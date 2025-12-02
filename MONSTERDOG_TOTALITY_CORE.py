@@ -16,6 +16,7 @@
 
 import asyncio
 import json
+import math
 import time
 from datetime import datetime, timezone
 from dataclasses import dataclass, asdict
@@ -75,7 +76,6 @@ class TotalityCore:
     
     def calculate_core_energy(self, t: float) -> float:
         """Calcule l'énergie du cœur."""
-        import math
         # Énergie basée sur la résonance
         base_energy = math.sin(2 * math.pi * self.config.resonance_hz * t) ** 2
         # Amplification par la température du cœur
@@ -91,7 +91,6 @@ class TotalityCore:
     def calculate_totality_quotient(self, unity: float, integration: float) -> float:
         """Calcule le quotient de totalité."""
         # TQ = (Unity × Integration) / (1 - e^(-t/100))
-        import math
         t = time.time() - self.start_time
         time_factor = 1 - math.exp(-t / 100)
         return (unity * integration) / max(time_factor, 0.001)
