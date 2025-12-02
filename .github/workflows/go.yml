@@ -25,6 +25,8 @@ jobs:
   build-and-test:
     name: Build and Test Go Implementation
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: 🛸 Checkout MONSTERDOG Repository
@@ -174,6 +176,8 @@ jobs:
     name: Test Benchmark Execution
     runs-on: ubuntu-latest
     needs: build-and-test
+    permissions:
+      contents: read
     
     steps:
       - name: 🛸 Checkout Repository
@@ -218,6 +222,8 @@ jobs:
     name: Integration Testing
     runs-on: ubuntu-latest
     needs: build-and-test
+    permissions:
+      contents: read
     
     steps:
       - name: 🛸 Checkout Repository
