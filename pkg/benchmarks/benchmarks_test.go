@@ -3,6 +3,7 @@ package benchmarks
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -189,16 +190,12 @@ func TestBenchmarkResultJSON(t *testing.T) {
 	}
 }
 
-// Helper function
+// Helper function - use standard library
 func containsAll(s string, substrs []string) bool {
 	for _, substr := range substrs {
-		if !contains(s, substr) {
+		if !strings.Contains(s, substr) {
 			return false
 		}
 	}
 	return true
-}
-
-func contains(s, substr string) bool {
-	return len(s) >= len(substr) && (s == substr || len(s) > len(substr) && (s[:len(substr)] == substr || contains(s[1:], substr)))
 }

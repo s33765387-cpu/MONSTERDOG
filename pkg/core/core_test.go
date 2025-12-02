@@ -73,11 +73,11 @@ func TestGetUptime(t *testing.T) {
 	}
 
 	md.Initialize()
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(10 * time.Millisecond) // Reduced from 100ms for faster tests
 
 	uptime = md.GetUptime()
-	if uptime < 100*time.Millisecond {
-		t.Errorf("Expected uptime >= 100ms, got %v", uptime)
+	if uptime < 10*time.Millisecond {
+		t.Errorf("Expected uptime >= 10ms, got %v", uptime)
 	}
 }
 

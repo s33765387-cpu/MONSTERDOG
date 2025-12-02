@@ -93,6 +93,18 @@ func TestEntanglQubits(t *testing.T) {
 	if err == nil {
 		t.Error("Expected error for invalid qubit indices")
 	}
+
+	// Test negative indices
+	err = qp.EntanglQubits(-1, 0)
+	if err == nil {
+		t.Error("Expected error for negative qubit index")
+	}
+
+	// Test entangling qubit with itself
+	err = qp.EntanglQubits(0, 0)
+	if err == nil {
+		t.Error("Expected error for entangling qubit with itself")
+	}
 }
 
 func TestMeasure(t *testing.T) {

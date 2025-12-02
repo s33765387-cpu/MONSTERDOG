@@ -95,8 +95,12 @@ func (qp *QuantumProcessor) EntanglQubits(qubit1, qubit2 int) error {
 		return fmt.Errorf("quantum processor not initialized")
 	}
 
-	if qubit1 >= qp.qubits || qubit2 >= qp.qubits {
+	if qubit1 < 0 || qubit2 < 0 || qubit1 >= qp.qubits || qubit2 >= qp.qubits {
 		return fmt.Errorf("qubit index out of range")
+	}
+
+	if qubit1 == qubit2 {
+		return fmt.Errorf("cannot entangle a qubit with itself")
 	}
 
 	// Simulate entanglement
