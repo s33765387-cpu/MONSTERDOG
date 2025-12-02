@@ -120,30 +120,30 @@ func NewBenchmarkRunner() *BenchmarkRunner {
 func (br *BenchmarkRunner) ExecuteAll() ([]BenchmarkResult, error) {
 	fmt.Println("🏆 MONSTERDOG GO MODE - Executing Official Benchmarks")
 	fmt.Println(strings.Repeat("=", 70))
-	
+
 	results := make([]BenchmarkResult, 0)
-	
+
 	for _, benchmark := range OfficialBenchmarks {
 		fmt.Printf("🚀 Running benchmark: %s...\n", benchmark.Name)
-		
+
 		result, err := br.executeBenchmark(benchmark)
 		if err != nil {
 			fmt.Printf("⚠️  Failed to execute %s: %v\n", benchmark.Name, err)
 			continue
 		}
-		
+
 		results = append(results, result)
 		fmt.Printf("✅ %s completed: %.2f%% %s\n", benchmark.Name, result.Score, result.Metric)
 	}
-	
+
 	// Save results
 	if err := br.saveResults(results); err != nil {
 		return results, fmt.Errorf("failed to save results: %w", err)
 	}
-	
+
 	fmt.Println(strings.Repeat("=", 70))
 	fmt.Printf("✨ Benchmark execution complete: %d/%d benchmarks\n", len(results), len(OfficialBenchmarks))
-	
+
 	return results, nil
 }
 
@@ -156,13 +156,13 @@ func (br *BenchmarkRunner) executeBenchmark(benchmark struct {
 	Metric         string
 }) (BenchmarkResult, error) {
 	start := time.Now()
-	
+
 	// Simulate benchmark execution
 	// In a real implementation, this would call actual benchmark code
 	score := simulateBenchmarkScore(benchmark.ID)
-	
+
 	executionTime := time.Since(start).Seconds()
-	
+
 	result := BenchmarkResult{
 		Name:           benchmark.Name,
 		Score:          score,
@@ -172,7 +172,7 @@ func (br *BenchmarkRunner) executeBenchmark(benchmark struct {
 		VSWorldRecord:  "~90%",
 		LeaderboardURL: benchmark.LeaderboardURL,
 	}
-	
+
 	return result, nil
 }
 
@@ -182,11 +182,11 @@ func (br *BenchmarkRunner) saveResults(results []BenchmarkResult) error {
 	if err := os.MkdirAll(br.resultsDir, 0755); err != nil {
 		return err
 	}
-	
+
 	// Calculate aggregate metrics
 	var totalScore, minScore, maxScore float64
 	minScore = 100.0
-	
+
 	benchmarkMap := make(map[string]BenchmarkResult)
 	for _, result := range results {
 		benchmarkMap[result.Name] = result
@@ -198,12 +198,12 @@ func (br *BenchmarkRunner) saveResults(results []BenchmarkResult) error {
 			maxScore = result.Score
 		}
 	}
-	
+
 	avgScore := 0.0
 	if len(results) > 0 {
 		avgScore = totalScore / float64(len(results))
 	}
-	
+
 	// Create summary
 	summary := BenchmarkSummary{
 		Model:           "MONSTERDOG",
@@ -217,20 +217,20 @@ func (br *BenchmarkRunner) saveResults(results []BenchmarkResult) error {
 			MaxScore:     maxScore,
 		},
 	}
-	
+
 	// Save summary
 	summaryPath := filepath.Join(br.resultsDir, "BENCHMARK_SUMMARY.json")
 	summaryData, err := json.MarshalIndent(summary, "", "  ")
 	if err != nil {
 		return err
 	}
-	
+
 	if err := os.WriteFile(summaryPath, summaryData, 0644); err != nil {
 		return err
 	}
-	
+
 	fmt.Printf("💾 Results saved to: %s\n", summaryPath)
-	
+
 	return nil
 }
 
@@ -248,10 +248,10 @@ func simulateBenchmarkScore(benchmarkID string) float64 {
 		"truthfulqa": 76.8,
 		"bigbench":   83.9,
 	}
-	
+
 	if score, ok := scores[benchmarkID]; ok {
 		return score
 	}
-	
+
 	return 75.0
 }

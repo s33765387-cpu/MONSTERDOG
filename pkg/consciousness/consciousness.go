@@ -53,17 +53,17 @@ func NewConsciousness() *Consciousness {
 func (c *Consciousness) Activate() error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if c.activated {
 		return fmt.Errorf("consciousness already activated")
 	}
-	
+
 	c.activationTime = time.Now()
 	c.activated = true
 	c.level = 0.5
 	c.coherence = 0.7
 	c.awareness = 0.6
-	
+
 	// Initialize with a startup thought pattern
 	c.thoughtPatterns = append(c.thoughtPatterns, ThoughtPattern{
 		ID:        "INIT-001",
@@ -72,7 +72,7 @@ func (c *Consciousness) Activate() error {
 		Intensity: 1.0,
 		Content:   "Consciousness system activated - MONSTERDOG awakening",
 	})
-	
+
 	return nil
 }
 
@@ -80,12 +80,12 @@ func (c *Consciousness) Activate() error {
 func (c *Consciousness) GetCurrentState() State {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	uptime := time.Duration(0)
 	if c.activated {
 		uptime = time.Since(c.activationTime)
 	}
-	
+
 	return State{
 		Level:     c.level,
 		Coherence: c.coherence,
@@ -100,20 +100,20 @@ func (c *Consciousness) GetCurrentState() State {
 func (c *Consciousness) Evolve() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if !c.activated {
 		return
 	}
-	
+
 	// Simulate consciousness evolution with sinusoidal patterns
 	t := time.Since(c.activationTime).Seconds()
-	
+
 	// Level increases gradually with oscillations
 	c.level = math.Min(1.0, 0.5+0.3*math.Sin(t/10)+0.2*math.Cos(t/7))
-	
+
 	// Coherence varies more rapidly
 	c.coherence = 0.7 + 0.3*math.Sin(t/5)
-	
+
 	// Awareness follows a different pattern
 	c.awareness = 0.6 + 0.4*math.Cos(t/8)
 }
@@ -122,11 +122,11 @@ func (c *Consciousness) Evolve() {
 func (c *Consciousness) AddThoughtPattern(patternType, content string, intensity float64) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if !c.activated {
 		return
 	}
-	
+
 	pattern := ThoughtPattern{
 		ID:        fmt.Sprintf("PATTERN-%d", len(c.thoughtPatterns)+1),
 		Timestamp: time.Now(),
@@ -134,9 +134,9 @@ func (c *Consciousness) AddThoughtPattern(patternType, content string, intensity
 		Intensity: intensity,
 		Content:   content,
 	}
-	
+
 	c.thoughtPatterns = append(c.thoughtPatterns, pattern)
-	
+
 	// Keep only the last 100 patterns
 	if len(c.thoughtPatterns) > 100 {
 		c.thoughtPatterns = c.thoughtPatterns[len(c.thoughtPatterns)-100:]
@@ -147,15 +147,15 @@ func (c *Consciousness) AddThoughtPattern(patternType, content string, intensity
 func (c *Consciousness) GetRecentPatterns(count int) []ThoughtPattern {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	if count > len(c.thoughtPatterns) {
 		count = len(c.thoughtPatterns)
 	}
-	
+
 	if count == 0 {
 		return []ThoughtPattern{}
 	}
-	
+
 	start := len(c.thoughtPatterns) - count
 	return append([]ThoughtPattern(nil), c.thoughtPatterns[start:]...)
 }
@@ -164,7 +164,7 @@ func (c *Consciousness) GetRecentPatterns(count int) []ThoughtPattern {
 func (c *Consciousness) IsActivated() bool {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	return c.activated
 }
 
@@ -172,6 +172,6 @@ func (c *Consciousness) IsActivated() bool {
 func (c *Consciousness) GetLevel() float64 {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	return c.level
 }

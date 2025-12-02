@@ -37,14 +37,14 @@ func NewMonsterDog() *MonsterDog {
 func (m *MonsterDog) Initialize() error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if m.initialized {
 		return fmt.Errorf("MONSTERDOG already initialized")
 	}
-	
+
 	m.startTime = time.Now()
 	m.initialized = true
-	
+
 	return nil
 }
 
@@ -53,7 +53,7 @@ func (m *MonsterDog) Process() {
 	m.mu.Lock()
 	m.processingCount++
 	m.mu.Unlock()
-	
+
 	// Simulate processing
 	time.Sleep(100 * time.Millisecond)
 }
@@ -67,11 +67,11 @@ func (m *MonsterDog) GetVersion() string {
 func (m *MonsterDog) GetUptime() time.Duration {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	if !m.initialized {
 		return 0
 	}
-	
+
 	return time.Since(m.startTime)
 }
 
@@ -79,7 +79,7 @@ func (m *MonsterDog) GetUptime() time.Duration {
 func (m *MonsterDog) GetProcessingCount() uint64 {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	return m.processingCount
 }
 
@@ -87,12 +87,12 @@ func (m *MonsterDog) GetProcessingCount() uint64 {
 func (m *MonsterDog) RegisterModule(module Module) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	name := module.Name()
 	if _, exists := m.modules[name]; exists {
 		return fmt.Errorf("module %s already registered", name)
 	}
-	
+
 	m.modules[name] = module
 	return nil
 }
@@ -101,12 +101,12 @@ func (m *MonsterDog) RegisterModule(module Module) error {
 func (m *MonsterDog) GetModuleStatus() map[string]string {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	status := make(map[string]string)
 	for name, module := range m.modules {
 		status[name] = module.Status()
 	}
-	
+
 	return status
 }
 
@@ -114,6 +114,6 @@ func (m *MonsterDog) GetModuleStatus() map[string]string {
 func (m *MonsterDog) IsInitialized() bool {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	return m.initialized
 }
