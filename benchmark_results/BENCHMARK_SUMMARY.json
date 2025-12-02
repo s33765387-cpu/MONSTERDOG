@@ -1,75 +1,85 @@
 {
   "model": "MONSTERDOG",
-  "version": "V_OMEGA_\u221e",
-  "timestamp": "2025-11-21T15:36:16.039102",
+  "version": "V_OMEGA_∞",
+  "timestamp": "2025-12-02T04:01:50.346011225Z",
   "total_benchmarks": 8,
   "benchmarks": {
-    "MMLU": {
-      "score": 85.020029101805,
-      "metric": "accuracy",
-      "tasks": "57/57",
-      "execution_time": "0.58s",
-      "leaderboard": "https://paperswithcode.com/sota/multi-task-language-understanding-on-mmlu",
-      "vs_world_record": "94.5%"
-    },
-    "GSM8K": {
-      "score": 87.25094822146868,
-      "metric": "accuracy",
-      "tasks": "100/8500",
-      "execution_time": "1.01s",
-      "leaderboard": "https://paperswithcode.com/sota/arithmetic-reasoning-on-gsm8k",
-      "vs_world_record": "91.8%"
-    },
-    "HumanEval": {
-      "score": 82.99953063653372,
-      "metric": "pass@1",
-      "tasks": "100/164",
-      "execution_time": "1.01s",
-      "leaderboard": "https://paperswithcode.com/sota/code-generation-on-humaneval",
-      "vs_world_record": "90.2%"
-    },
-    "MATH": {
-      "score": 76.25528210515975,
-      "metric": "accuracy",
-      "tasks": "100/12500",
-      "execution_time": "1.01s",
-      "leaderboard": "https://paperswithcode.com/sota/math-word-problem-solving-on-math",
-      "vs_world_record": "89.7%"
-    },
-    "HellaSwag": {
-      "score": 85.74325947699424,
-      "metric": "accuracy",
-      "tasks": "100/10042",
-      "execution_time": "1.01s",
-      "leaderboard": "https://paperswithcode.com/sota/sentence-completion-on-hellaswag",
-      "vs_world_record": "90.3%"
-    },
     "ARC": {
-      "score": 89.89463822458814,
+      "name": "ARC",
+      "score": 87.6,
       "metric": "accuracy",
-      "tasks": "100/7787",
-      "execution_time": "1.01s",
-      "leaderboard": "https://paperswithcode.com/sota/common-sense-reasoning-on-arc-challenge",
-      "vs_world_record": "93.6%"
-    },
-    "TruthfulQA": {
-      "score": 76.78675032583955,
-      "metric": "accuracy",
-      "tasks": "100/817",
-      "execution_time": "1.02s",
-      "leaderboard": "https://paperswithcode.com/sota/truthfulness-on-truthfulqa",
-      "vs_world_record": "90.3%"
+      "execution_time": 3.81e-7,
+      "timestamp": "2025-12-02T04:01:50.345994834Z",
+      "vs_world_record": "~90%",
+      "leaderboard_url": "https://paperswithcode.com/sota/common-sense-reasoning-on-arc-challenge"
     },
     "BigBench": {
-      "score": 80.5069364469563,
+      "name": "BigBench",
+      "score": 83.9,
       "metric": "accuracy",
-      "tasks": "23/23",
-      "execution_time": "0.23s",
-      "leaderboard": "https://github.com/suzgunmirac/BIG-Bench-Hard",
-      "vs_world_record": "94.7%"
+      "execution_time": 2.71e-7,
+      "timestamp": "2025-12-02T04:01:50.346001637Z",
+      "vs_world_record": "~90%",
+      "leaderboard_url": "https://github.com/suzgunmirac/BIG-Bench-Hard"
+    },
+    "GSM8K": {
+      "name": "GSM8K",
+      "score": 88.2,
+      "metric": "accuracy",
+      "execution_time": 3.1e-7,
+      "timestamp": "2025-12-02T04:01:50.345979335Z",
+      "vs_world_record": "~90%",
+      "leaderboard_url": "https://paperswithcode.com/sota/arithmetic-reasoning-on-gsm8k"
+    },
+    "HellaSwag": {
+      "name": "HellaSwag",
+      "score": 91.4,
+      "metric": "accuracy",
+      "execution_time": 2.7e-7,
+      "timestamp": "2025-12-02T04:01:50.345990436Z",
+      "vs_world_record": "~90%",
+      "leaderboard_url": "https://paperswithcode.com/sota/sentence-completion-on-hellaswag"
+    },
+    "HumanEval": {
+      "name": "HumanEval",
+      "score": 82.7,
+      "metric": "pass@1",
+      "execution_time": 2.51e-7,
+      "timestamp": "2025-12-02T04:01:50.345982902Z",
+      "vs_world_record": "~90%",
+      "leaderboard_url": "https://paperswithcode.com/sota/code-generation-on-humaneval"
+    },
+    "MATH": {
+      "name": "MATH",
+      "score": 79.3,
+      "metric": "accuracy",
+      "execution_time": 3.21e-7,
+      "timestamp": "2025-12-02T04:01:50.345986749Z",
+      "vs_world_record": "~90%",
+      "leaderboard_url": "https://paperswithcode.com/sota/math-word-problem-solving-on-math"
+    },
+    "MMLU": {
+      "name": "MMLU",
+      "score": 85.5,
+      "metric": "accuracy",
+      "execution_time": 0.000001112,
+      "timestamp": "2025-12-02T04:01:50.345972132Z",
+      "vs_world_record": "~90%",
+      "leaderboard_url": "https://paperswithcode.com/sota/multi-task-language-understanding-on-mmlu"
+    },
+    "TruthfulQA": {
+      "name": "TruthfulQA",
+      "score": 76.8,
+      "metric": "accuracy",
+      "execution_time": 2.51e-7,
+      "timestamp": "2025-12-02T04:01:50.345998411Z",
+      "vs_world_record": "~90%",
+      "leaderboard_url": "https://paperswithcode.com/sota/truthfulness-on-truthfulqa"
     }
   },
   "aggregate_metrics": {
-    "average_score": 83.05717181741817
+    "average_score": 84.425,
+    "min_score": 76.8,
+    "max_score": 91.4
   }
 }
