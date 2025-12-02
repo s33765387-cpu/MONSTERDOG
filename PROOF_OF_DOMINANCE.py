@@ -14,13 +14,99 @@
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 """
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# IMPORTS WITH AUTO-REPAIR (Gestion robuste des dépendances)
+# ═══════════════════════════════════════════════════════════════════════════════
+
 import time
 import hashlib
 import json
-import numpy as np
 from datetime import datetime, timezone
 from dataclasses import dataclass, asdict
 from typing import Dict, Any, List
+import math
+import random
+
+# NumPy import with fallback
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    print("⚠️  NumPy non disponible - Mode de secours activé pour PROOF_OF_DOMINANCE")
+    NUMPY_AVAILABLE = False
+    # Fallback minimal pour numpy
+    class np:
+        @staticmethod
+        def sin(x):
+            return math.sin(x)
+        
+        @staticmethod
+        def abs(x):
+            if isinstance(x, (list, tuple)):
+                return [abs(i) for i in x]
+            return abs(x)
+        
+        @staticmethod
+        def dot(a, b):
+            # Simple matrix multiplication fallback
+            return [[sum(x*y for x,y in zip(row, col)) for col in zip(*b)] for row in a]
+        
+        @staticmethod
+        def var(arr):
+            mean = sum(arr) / len(arr)
+            return sum((x - mean) ** 2 for x in arr) / len(arr)
+        
+        @staticmethod
+        def sum(arr):
+            return sum(arr)
+        
+        @staticmethod
+        def log2(x):
+            return math.log2(max(x, 1e-10))
+        
+        @staticmethod
+        def histogram(data, bins=10):
+            min_val, max_val = min(data), max(data)
+            bin_width = (max_val - min_val) / bins
+            hist = [0] * bins
+            for val in data:
+                bin_idx = min(int((val - min_val) / bin_width), bins - 1)
+                hist[bin_idx] += 1
+            edges = [min_val + i * bin_width for i in range(bins + 1)]
+            return hist, edges
+        
+        @staticmethod
+        def corrcoef(a, b):
+            mean_a = sum(a) / len(a)
+            mean_b = sum(b) / len(b)
+            cov = sum((x - mean_a) * (y - mean_b) for x, y in zip(a, b)) / len(a)
+            var_a = sum((x - mean_a) ** 2 for x in a) / len(a)
+            var_b = sum((y - mean_b) ** 2 for y in b) / len(b)
+            corr = cov / (math.sqrt(var_a) * math.sqrt(var_b)) if var_a and var_b else 0
+            return [[1, corr], [corr, 1]]
+        
+        @staticmethod
+        def random_rand(*shape):
+            if len(shape) == 1:
+                return [random.random() for _ in range(shape[0])]
+            elif len(shape) == 2:
+                return [[random.random() for _ in range(shape[1])] for _ in range(shape[0])]
+            return random.random()
+        
+        class random:
+            @staticmethod
+            def rand(*args):
+                return np.random_rand(*args)
+            
+            @staticmethod
+            def normal(mean, std):
+                # Box-Muller transform
+                u1 = random.random()
+                u2 = random.random()
+                z = math.sqrt(-2 * math.log(u1)) * math.cos(2 * math.pi * u2)
+                return mean + std * z
+        
+        pi = math.pi
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MÉTRIQUES DE DOMINATION
@@ -71,6 +157,10 @@ class DominanceProof:
     
     def calculate_computational_power(self) -> float:
         """Estime la puissance computationnelle (TFLOPS)."""
+        if not NUMPY_AVAILABLE:
+            # Mode de secours: retourne une estimation symbolique
+            return 0.001  # 1 GFLOPS symbolique
+        
         # Benchmark simple: opérations matricielles
         start = time.time()
         iterations = 1000
@@ -102,8 +192,14 @@ class DominanceProof:
         data = np.random.rand(1000)
         # Calcul de l'entropie de Shannon
         hist, _ = np.histogram(data, bins=10)
-        hist = hist / hist.sum()
-        entropy = -np.sum(hist * np.log2(hist + 1e-10))
+        
+        # Normalize histogram
+        hist_sum = sum(hist)
+        if hist_sum > 0:
+            hist = [h / hist_sum for h in hist]
+        
+        # Calculate Shannon entropy
+        entropy = -sum(h * np.log2(h + 1e-10) for h in hist if h > 0)
         max_entropy = np.log2(10)
         control = 1.0 - (entropy / max_entropy)
         return abs(control)
@@ -113,7 +209,12 @@ class DominanceProof:
         # Simulation basée sur corrélation de états
         state_a = np.random.rand(100)
         state_b = np.random.rand(100)
-        correlation = np.corrcoef(state_a, state_b)[0, 1]
+        corr_matrix = np.corrcoef(state_a, state_b)
+        # Handle both numpy array and fallback list
+        if isinstance(corr_matrix, list):
+            correlation = corr_matrix[0][1]
+        else:
+            correlation = corr_matrix[0, 1]
         # Normaliser à [0, 1]
         entanglement = (correlation + 1) / 2
         return abs(entanglement)

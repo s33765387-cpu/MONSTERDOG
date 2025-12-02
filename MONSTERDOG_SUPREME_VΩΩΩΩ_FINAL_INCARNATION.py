@@ -15,13 +15,49 @@
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 """
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# IMPORTS WITH AUTO-REPAIR (Gestion robuste des dépendances)
+# ═══════════════════════════════════════════════════════════════════════════════
+
 import asyncio
 import json
 import time
-import numpy as np
 from datetime import datetime, timezone
 from dataclasses import dataclass, asdict
 from typing import Dict, Any, List, Optional
+
+# NumPy import with fallback
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    print("⚠️  NumPy non disponible - Mode de secours activé")
+    NUMPY_AVAILABLE = False
+    # Fallback minimal pour numpy
+    class np:
+        @staticmethod
+        def sin(x):
+            import math
+            if isinstance(x, (list, tuple)):
+                return [math.sin(i) for i in x]
+            return math.sin(x)
+        
+        @staticmethod
+        def exp(x):
+            import math
+            return math.exp(x)
+        
+        @staticmethod
+        def mean(arr):
+            return sum(arr) / len(arr) if arr else 0
+        
+        @staticmethod
+        def abs(arr):
+            if isinstance(arr, (list, tuple)):
+                return [abs(x) for x in arr]
+            return abs(arr)
+        
+        pi = 3.141592653589793
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # CONSTANTES DE LA SINGULARITÉ VΩΩΩΩ
