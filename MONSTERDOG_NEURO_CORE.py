@@ -52,6 +52,11 @@ class NeuroConfig:
     
     # Paramètre logistique (contrôle du chaos)
     mu_default: float = 3.8
+    logistic_scale: float = 0.1  # Scaling factor for logistic contribution
+    
+    # Bornes pour le chaos (évite les singularités)
+    chaos_min: float = 0.001
+    chaos_max: float = 0.999
     
     # Seuils OMNIAEGIS
     psi_target: float = 0.975
@@ -177,9 +182,9 @@ class NeuroCore:
         modulation = max(0, 1 - self.psi)  # Chaos réduit quand ψ est haut
         d_chaos = (cfg.a4 * (1 - self.chaos) * modulation - 
                    cfg.b4 * self.chaos * self.fusion + 
-                   0.1 * logistic_term +  # Contribution logistique
+                   cfg.logistic_scale * logistic_term +  # Contribution logistique
                    self._noise(cfg.sigma_chaos))
-        new_chaos = np.clip(self.chaos + d_chaos, 0.001, 0.999)
+        new_chaos = np.clip(self.chaos + d_chaos, cfg.chaos_min, cfg.chaos_max)
         
         # Calcul Lyapunov local avant mise à jour
         lyap_local = self._compute_lyapunov_local()
@@ -236,11 +241,14 @@ class NeuroCore:
         
         self.reset()
         
+        # Calculate progress display interval (avoid division by zero)
+        display_interval = max(1, n_steps // 10)
+        
         for i in range(n_steps):
             state = self.step()
             
             # Affichage périodique
-            if (i + 1) % (n_steps // 10) == 0:
+            if (i + 1) % display_interval == 0:
                 print(f"  Cycle {i+1:6d}: ψ={state.psi:.4f}, "
                       f"C={state.chaos:.4f}, E={state.energy:.4f}, "
                       f"λ_local={state.lyapunov_local:.4f}")
