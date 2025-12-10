@@ -56,7 +56,7 @@ jobs:
         id: benchmarks
         run: |
           echo "🏆 Starting MONSTERDOG Benchmark Suite..."
-          python3 src/benchmarks/benchmark_orchestrator.py
+          node ./src/benchmarks/go-mode-benchmarks.js
         continue-on-error: true
       
       - name: 📊 Display Benchmark Summary
