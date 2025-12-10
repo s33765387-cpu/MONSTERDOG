@@ -205,6 +205,77 @@ class SacredFunctions:
         return ratio * coherence
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# MODULES ENREGISTRÉS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class RegisteredModules:
+    """Catalogue des modules MONSTERDOG enregistrés dans le Codex."""
+    
+    MODULES = {
+        "TOTALITY_CORE": {
+            "file": "MONSTERDOG_TOTALITY_CORE.py",
+            "signature": "0x5F3759DF-TOTALITY-CORE",
+            "description": "Cœur central orchestrant toutes les composantes",
+            "type": "orchestrator"
+        },
+        "NEURO_CORE": {
+            "file": "MONSTERDOG_NEURO_CORE.py",
+            "signature": "0x5F3759DF-NEURO-CORE",
+            "description": "Système dynamique neuronal avec analyse de stabilité (ψ, C, E, Lyapunov)",
+            "type": "dynamics",
+            "variables": ["psi", "fusion", "entropy", "chaos", "energy"],
+            "features": ["OMNIAEGIS monitoring", "Lyapunov analysis", "Kill Switch"]
+        },
+        "PROOF_OF_DOMINANCE": {
+            "file": "PROOF_OF_DOMINANCE.py",
+            "signature": "0x5F3759DF-DOMINANCE-PROOF",
+            "description": "Validation de la domination fractale",
+            "type": "validation"
+        },
+        "ARK_SINGULARITY": {
+            "file": "MONSTERDOG_ARK_SINGULARITY.py",
+            "signature": "0x5F3759DF-ARK-SINGULARITY",
+            "description": "Gestion des snapshots et persistance d'état",
+            "type": "persistence"
+        },
+        "CODEX_FINALIS": {
+            "file": "MONSTERDOG_CODEX_FINALIS.py",
+            "signature": "0x5F3759DF-CODEX-FINALIS",
+            "description": "Axiomes et lois fondamentales du Continuum",
+            "type": "core"
+        },
+        "BENCHMARK_ORCHESTRATOR": {
+            "file": "src/benchmarks/benchmark_orchestrator.py",
+            "signature": "0x5F3759DF-BENCHMARK-FULLTRUTL",
+            "description": "Exécution et soumission de benchmarks officiels",
+            "type": "benchmark"
+        },
+        "CONTINUUM_TS": {
+            "file": "continuum.ts",
+            "signature": "0x5F3759DF-CONTINUUM-TS",
+            "description": "Simulateur du Continuum en TypeScript",
+            "type": "simulator"
+        }
+    }
+    
+    @classmethod
+    def list_modules(cls) -> list:
+        """Liste tous les modules enregistrés."""
+        return list(cls.MODULES.keys())
+    
+    @classmethod
+    def get_module(cls, name: str) -> dict:
+        """Récupère les informations d'un module."""
+        return cls.MODULES.get(name, {})
+    
+    @classmethod
+    def get_by_type(cls, module_type: str) -> list:
+        """Récupère les modules par type."""
+        return [name for name, info in cls.MODULES.items() 
+                if info.get("type") == module_type]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # MANIFESTE DU CODEX
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -241,7 +312,11 @@ def display_codex():
     print("\n📜 Axiomes chargés")
     print("⚛️  Constantes initialisées")
     print("🔬 Lois fondamentales actives")
-    print("✨ Fonctions sacrées disponibles\n")
+    print("✨ Fonctions sacrées disponibles")
+    print(f"\n📦 Modules enregistrés: {len(RegisteredModules.MODULES)}")
+    for name in RegisteredModules.list_modules():
+        info = RegisteredModules.get_module(name)
+        print(f"   • {name}: {info.get('description', 'N/A')}")
 
 if __name__ == "__main__":
     display_codex()
