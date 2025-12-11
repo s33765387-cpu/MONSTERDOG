@@ -48,6 +48,7 @@ PROOF_OF_DOMINANCE.json
 TOTALITY_CORE_STATE.json
 VOMEGA_SUPREME_STATE.json
 monsterdog_totality_snapshot.json
+PIPELINE_REPORT.json
 
 # Benchmark results (generated at runtime)
 benchmark_results/

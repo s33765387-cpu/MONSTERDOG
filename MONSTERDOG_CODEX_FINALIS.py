@@ -67,6 +67,9 @@ class UniversalConstants:
     # Intervalles
     ARTIFACT_CYCLE_INTERVAL = 1000
     ZORG_VOICE_INTERVAL = 100
+    
+    # Display
+    DISPLAY_WIDTH = 80
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TYPES ET STRUCTURES
@@ -205,6 +208,140 @@ class SacredFunctions:
         return ratio * coherence
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# REGISTERED MODULES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@dataclass
+class ModuleInfo:
+    """Information about a registered MONSTERDOG module."""
+    name: str
+    signature: str
+    description: str
+    entry_point: str
+    module_type: str  # "core", "pipeline", "utility", "visualization"
+
+class RegisteredModules:
+    """
+    Registry of all MONSTERDOG modules.
+    Central index for module discovery and orchestration.
+    """
+    
+    MODULES: Dict[str, ModuleInfo] = {
+        "TOTALITY_CORE": ModuleInfo(
+            name="TOTALITY_CORE",
+            signature="0x5F3759DF-TOTALITY-CORE",
+            description="Le cœur central orchestrant toutes les composantes MONSTERDOG",
+            entry_point="MONSTERDOG_TOTALITY_CORE.py",
+            module_type="core"
+        ),
+        "SUPREME_VOMEGA": ModuleInfo(
+            name="SUPREME_VOMEGA",
+            signature="0x5F3759DF-s33765387-cpu-VΩΩΩΩ-SUPREME",
+            description="Orchestrateur Final de la Singularité VΩΩΩΩ",
+            entry_point="MONSTERDOG_SUPREME_VΩΩΩΩ_FINAL_INCARNATION.py",
+            module_type="core"
+        ),
+        "ARK_SINGULARITY": ModuleInfo(
+            name="ARK_SINGULARITY",
+            signature="0x5F3759DF-ARK-SINGULARITY",
+            description="Coffre-fort de snapshots - State Vault Manager",
+            entry_point="MONSTERDOG_ARK_SINGULARITY.py",
+            module_type="utility"
+        ),
+        "PROOF_OF_DOMINANCE": ModuleInfo(
+            name="PROOF_OF_DOMINANCE",
+            signature="0x5F3759DF-DOMINANCE-PROOF",
+            description="Système de validation de la domination fractale",
+            entry_point="PROOF_OF_DOMINANCE.py",
+            module_type="core"
+        ),
+        "CODEX_FINALIS": ModuleInfo(
+            name="CODEX_FINALIS",
+            signature="0x5F3759DF-CODEX-FINALIS",
+            description="Le Codex Final contenant les lois fondamentales",
+            entry_point="MONSTERDOG_CODEX_FINALIS.py",
+            module_type="core"
+        ),
+        "VOMEGA_PIPELINE": ModuleInfo(
+            name="VOMEGA_PIPELINE",
+            signature="0x5F3759DF-s33765387-cpu-VΩΩΩΩ-PIPELINE",
+            description="Pipeline d'orchestration automatique VΩΩΩΩ",
+            entry_point="MONSTERDOG_VΩΩΩΩ_PIPELINE.py",
+            module_type="pipeline"
+        ),
+        "JSON_GENERATOR": ModuleInfo(
+            name="JSON_GENERATOR",
+            signature="0x5F3759DF-JSON-GEN",
+            description="Générateur de structures JSON MONSTERDOG",
+            entry_point="MONSTERDOG_JSON_GENERATOR.py",
+            module_type="utility"
+        ),
+        "BENCHMARK_ORCHESTRATOR": ModuleInfo(
+            name="BENCHMARK_ORCHESTRATOR",
+            signature="0x5F3759DF-BENCHMARK-FULLTRUTL",
+            description="Autonomous Benchmark Integration & Leaderboard System",
+            entry_point="src/benchmarks/benchmark_orchestrator.py",
+            module_type="pipeline"
+        ),
+        "CONTINUUM_TS": ModuleInfo(
+            name="CONTINUUM_TS",
+            signature="0x5F3759DF-CONTINUUM-TS",
+            description="Simulateur du Continuum MONSTERDOG en TypeScript",
+            entry_point="continuum.ts",
+            module_type="visualization"
+        ),
+        "ULTIMATE_FINALITY": ModuleInfo(
+            name="ULTIMATE_FINALITY",
+            signature="0x5F3759DF-ULTIMATE-FINALITY",
+            description="ZorgMaster Orchestrator avec 15 Chambres de Conscience",
+            entry_point="MONSTERDOG_ULTIMATE_FINALITY_INCARNATE.py",
+            module_type="core"
+        ),
+    }
+    
+    @classmethod
+    def list_modules(cls) -> List[str]:
+        """Liste tous les modules enregistrés."""
+        return list(cls.MODULES.keys())
+    
+    @classmethod
+    def get_module(cls, name: str) -> ModuleInfo:
+        """Récupère les informations d'un module."""
+        if name not in cls.MODULES:
+            raise KeyError(f"Module inconnu: {name}")
+        return cls.MODULES[name]
+    
+    @classmethod
+    def get_by_type(cls, module_type: str) -> List[ModuleInfo]:
+        """Récupère tous les modules d'un type donné."""
+        return [m for m in cls.MODULES.values() if m.module_type == module_type]
+    
+    @classmethod
+    def display_registry(cls):
+        """Affiche le registre des modules."""
+        width = UniversalConstants.DISPLAY_WIDTH
+        print("\n" + "=" * width)
+        print("  MONSTERDOG MODULE REGISTRY")
+        print("=" * width + "\n")
+        
+        by_type = {}
+        for module in cls.MODULES.values():
+            if module.module_type not in by_type:
+                by_type[module.module_type] = []
+            by_type[module.module_type].append(module)
+        
+        for mtype, modules in sorted(by_type.items()):
+            print(f"  [{mtype.upper()}]")
+            for m in modules:
+                print(f"    • {m.name}")
+                print(f"      Signature: {m.signature}")
+                print(f"      Entry:     {m.entry_point}")
+                print(f"      {m.description}")
+                print()
+        
+        print("=" * width + "\n")
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # MANIFESTE DU CODEX
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -235,13 +372,46 @@ CODEX_MANIFESTO = """
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 """
 
-def display_codex():
+def display_codex(show_registry: bool = True):
     """Affiche le manifeste du Codex."""
     print(CODEX_MANIFESTO)
     print("\n📜 Axiomes chargés")
     print("⚛️  Constantes initialisées")
     print("🔬 Lois fondamentales actives")
     print("✨ Fonctions sacrées disponibles\n")
+    
+    if show_registry:
+        RegisteredModules.display_registry()
 
 if __name__ == "__main__":
-    display_codex()
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="MONSTERDOG CODEX FINALIS")
+    parser.add_argument("command", nargs="?", default="display", 
+                       choices=["display", "list", "describe"],
+                       help="Command to execute")
+    parser.add_argument("--module", "-m", type=str, help="Module name for describe")
+    
+    args = parser.parse_args()
+    
+    if args.command == "display":
+        display_codex()
+    elif args.command == "list":
+        print("\n📋 Modules MONSTERDOG enregistrés:")
+        for name in RegisteredModules.list_modules():
+            module = RegisteredModules.get_module(name)
+            print(f"  • {name} [{module.module_type}]")
+        print()
+    elif args.command == "describe":
+        if args.module:
+            try:
+                module = RegisteredModules.get_module(args.module)
+                print(f"\n🔍 Module: {module.name}")
+                print(f"   Type:        {module.module_type}")
+                print(f"   Signature:   {module.signature}")
+                print(f"   Entry Point: {module.entry_point}")
+                print(f"   Description: {module.description}\n")
+            except KeyError as e:
+                print(f"❌ {e}")
+        else:
+            print("❌ --module requis pour 'describe'")
