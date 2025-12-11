@@ -67,6 +67,9 @@ class UniversalConstants:
     # Intervalles
     ARTIFACT_CYCLE_INTERVAL = 1000
     ZORG_VOICE_INTERVAL = 100
+    
+    # Display
+    DISPLAY_WIDTH = 80
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TYPES ET STRUCTURES
@@ -316,9 +319,10 @@ class RegisteredModules:
     @classmethod
     def display_registry(cls):
         """Affiche le registre des modules."""
-        print("\n" + "="*80)
+        width = UniversalConstants.DISPLAY_WIDTH
+        print("\n" + "=" * width)
         print("  MONSTERDOG MODULE REGISTRY")
-        print("="*80 + "\n")
+        print("=" * width + "\n")
         
         by_type = {}
         for module in cls.MODULES.values():
@@ -335,7 +339,7 @@ class RegisteredModules:
                 print(f"      {m.description}")
                 print()
         
-        print("="*80 + "\n")
+        print("=" * width + "\n")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MANIFESTE DU CODEX

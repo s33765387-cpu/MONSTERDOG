@@ -113,7 +113,7 @@ echo "📜 STEP 4: Displaying MONSTERDOG Module Registry..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-python3 MONSTERDOG_CODEX_FINALIS.py list
+python3 "MONSTERDOG_CODEX_FINALIS.py" list
 
 echo ""
 
