@@ -39,6 +39,10 @@ class NeuroConstants:
     OPTIMAL_PSI_THRESHOLD = 0.975  # ψ ≥ 0.975 = OPTIMAL
     WARN_PSI_THRESHOLD = 0.9       # 0.9 ≤ ψ < 0.975 = WARN
     # ψ < 0.9 = CRITICAL
+    
+    # Computational constants
+    ENTROPY_EPSILON = 1e-10  # Small value to prevent log(0)
+    TIME_STABILIZATION_CONSTANT = 50.0  # Time constant for system stabilization (seconds)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # OMNIAEGIS STATUS LEVELS
@@ -171,7 +175,7 @@ class NeuroCore:
         
         # Time-based improvement (systems stabilize over time)
         t = time.time() - self.start_time
-        time_factor = 1 - math.exp(-t / 50)  # Approaches 1 asymptotically
+        time_factor = 1 - math.exp(-t / NeuroConstants.TIME_STABILIZATION_CONSTANT)
         
         return min(psi * (0.9 + 0.1 * time_factor), 1.0)
     
@@ -189,7 +193,7 @@ class NeuroCore:
         probs = [a / total for a in activations]
         
         # Shannon entropy (normalized)
-        entropy = -sum(p * math.log2(p + 1e-10) for p in probs if p > 0)
+        entropy = -sum(p * math.log2(p + NeuroConstants.ENTROPY_EPSILON) for p in probs if p > 0)
         max_entropy = math.log2(len(self.pathways))
         
         return entropy / max_entropy if max_entropy > 0 else 0.0
