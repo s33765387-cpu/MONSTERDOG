@@ -297,6 +297,13 @@ class RegisteredModules:
             entry_point="MONSTERDOG_ULTIMATE_FINALITY_INCARNATE.py",
             module_type="core"
         ),
+        "NEURO_CORE": ModuleInfo(
+            name="NEURO_CORE",
+            signature="0x5F3759DF-NEURO-CORE",
+            description="Système nerveux fractal avec monitoring OMNIAEGIS",
+            entry_point="MONSTERDOG_NEURO_CORE.py",
+            module_type="core"
+        ),
     }
     
     @classmethod

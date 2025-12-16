@@ -66,6 +66,8 @@ class TotalityCore:
             "BENCHMARK_DASHBOARD": True,
             "ULTIMATE_INTEGRATION": True,
             "CONTINUUM_TS": True,
+            "NEURO_CORE": True,
+            "VOMEGA_PIPELINE": True,
         }
         
     def calculate_unity_index(self) -> float:

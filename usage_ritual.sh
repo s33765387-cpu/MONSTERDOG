@@ -118,6 +118,19 @@ python3 "MONSTERDOG_CODEX_FINALIS.py" list
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# STEP 5: NEURO CORE OMNIAEGIS Status Check
+# ═══════════════════════════════════════════════════════════════════════════════
+echo "🧠 STEP 5: NEURO CORE OMNIAEGIS Status Check..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+python3 "MONSTERDOG_NEURO_CORE.py" --report
+
+echo ""
+echo "✅ OMNIAEGIS monitoring complete!"
+echo ""
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # COMPLETION
 # ═══════════════════════════════════════════════════════════════════════════════
 echo "╔═══════════════════════════════════════════════════════════════════════════════╗"
@@ -131,6 +144,7 @@ echo "║   ✓ PROOF_OF_DOMINANCE.py                                           
 echo "║   ✓ MONSTERDOG_ARK_SINGULARITY.py                                            ║"
 echo "║   ✓ MONSTERDOG_CODEX_FINALIS.py                                              ║"
 echo "║   ✓ MONSTERDOG_VΩΩΩΩ_PIPELINE.py                                             ║"
+echo "║   ✓ MONSTERDOG_NEURO_CORE.py                                                 ║"
 echo "║   ✓ continuum.ts                                                             ║"
 echo "║                                                                               ║"
 echo "║   SIGNATURE: 0x5F3759DF-s33765387-cpu-FULLTRUTL-Δ-Ω                          ║"

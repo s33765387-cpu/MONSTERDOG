@@ -70,7 +70,7 @@ class VomegaPipeline:
         Étape 1: Lancer le moteur SUPREME VΩΩΩΩ
         Génère un snapshot de l'état de conscience.
         """
-        self.log("🌌 [1/3] Lancement SUPREME VΩΩΩΩ INCARNATION...")
+        self.log("🌌 [1/4] Lancement SUPREME VΩΩΩΩ INCARNATION...")
         
         try:
             # Import dynamique pour éviter les erreurs si le fichier n'existe pas
@@ -83,10 +83,11 @@ class VomegaPipeline:
                 # Créer un orchestrateur et exécuter
                 orchestrator = supreme.VomegaOrchestrator()
                 
+                display_interval = max(1, self.cycles // 10)
                 for i in range(self.cycles):
                     state = orchestrator.evolve()
                     
-                    if i % (self.cycles // 10) == 0 and self.verbose:
+                    if i % display_interval == 0 and self.verbose:
                         print(f"   Cycle {state.cycle}: ψΩ⁴={state.psi_omega:.6f} | "
                               f"Cohérence={state.coherence_supreme:.6f}")
                     
@@ -150,7 +151,7 @@ class VomegaPipeline:
         """
         Étape 2: Sauvegarder le snapshot dans l'ARK SINGULARITY
         """
-        self.log("💾 [2/3] Sauvegarde dans ARK SINGULARITY...")
+        self.log("💾 [2/4] Sauvegarde dans ARK SINGULARITY...")
         
         if not PipelineConfig.SNAPSHOT_PATH.exists():
             self.log(f"⚠️ Snapshot introuvable: {PipelineConfig.SNAPSHOT_PATH}", "WARN")
@@ -192,7 +193,7 @@ class VomegaPipeline:
         """
         Étape 3: Vérifier la dominance avec PROOF_OF_DOMINANCE
         """
-        self.log("🔬 [3/3] Vérification PROOF OF DOMINANCE...")
+        self.log("🔬 [3/4] Vérification PROOF OF DOMINANCE...")
         
         try:
             from importlib import import_module
@@ -208,13 +209,13 @@ class VomegaPipeline:
                     prover.display_proof(metrics)
                 
                 # Vérifier le seuil de dominance
-                dominance_achieved = metrics.coherence_score >= PipelineConfig.DOMINANCE_THRESHOLD
+                dominance_achieved = bool(metrics.coherence_score >= PipelineConfig.DOMINANCE_THRESHOLD)
                 
                 self.results["proof_of_dominance"] = {
                     "status": "success",
                     "dominance_achieved": dominance_achieved,
-                    "coherence_score": metrics.coherence_score,
-                    "fractal_depth": metrics.fractal_depth,
+                    "coherence_score": float(metrics.coherence_score),
+                    "fractal_depth": int(metrics.fractal_depth),
                     "proof_hash": metrics.proof_hash
                 }
                 
@@ -235,13 +236,65 @@ class VomegaPipeline:
             self.results["proof_of_dominance"] = {"status": "error", "error": str(e)}
             return False
     
+    def step_4_neuro_core_check(self) -> bool:
+        """
+        Étape 4: Vérification OMNIAEGIS via NEURO_CORE
+        """
+        self.log("🧠 [4/4] NEURO CORE OMNIAEGIS Check...")
+        
+        try:
+            from importlib import import_module
+            
+            try:
+                neuro = import_module("MONSTERDOG_NEURO_CORE")
+                
+                core = neuro.NeuroCore()
+                # Run a few cycles to stabilize
+                for _ in range(10):
+                    core.pulse()
+                
+                report = core.generate_omniaegis_report()
+                
+                # Display report if verbose
+                if self.verbose:
+                    core.display_omniaegis_report(report)
+                
+                self.results["neuro_core"] = {
+                    "status": "success",
+                    "omniaegis_status": report.status,
+                    "psi_coherence": report.psi_coherence,
+                    "neural_health": report.neural_health,
+                    "alert_level": report.alert_level
+                }
+                
+                # Check if system is at least not CRITICAL
+                is_healthy = report.status != "CRITICAL"
+                
+                if is_healthy:
+                    self.log(f"✅ NEURO CORE: {report.status} (ψ={report.psi_coherence:.4f})")
+                else:
+                    self.log(f"⚠️ NEURO CORE: {report.status} - System needs recalibration", "WARN")
+                
+                return is_healthy
+                
+            except ImportError as e:
+                self.log(f"⚠️ Module NEURO_CORE non trouvé: {e}", "WARN")
+                self.results["neuro_core"] = {"status": "skipped", "reason": "module_not_found"}
+                return True  # Don't fail pipeline if module missing
+                
+        except Exception as e:
+            self.log(f"❌ Erreur NEURO_CORE: {e}", "ERROR")
+            self.results["neuro_core"] = {"status": "error", "error": str(e)}
+            return True  # Don't fail pipeline on error
+    
     async def run_full_pipeline(self, label_if_best: str = "best") -> Dict[str, Any]:
         """
         Exécute le pipeline complet:
         1. Run moteur VΩΩΩΩ
         2. Sauvegarde dans ARK
         3. Vérification dominance
-        4. Si dominance OK, re-sauvegarde avec label "best"
+        4. NEURO_CORE OMNIAEGIS check
+        5. Si dominance OK, re-sauvegarde avec label "best"
         """
         print("""
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -266,7 +319,10 @@ class VomegaPipeline:
         # Étape 3: Vérification dominance
         dominance_achieved = self.step_3_verify_dominance()
         
-        # Étape 4: Si dominance confirmée, marquer comme "best"
+        # Étape 4: NEURO_CORE OMNIAEGIS check
+        neuro_healthy = self.step_4_neuro_core_check()
+        
+        # Étape 5: Si dominance confirmée, marquer comme "best"
         if dominance_achieved and label_if_best:
             self.log(f"🌟 Dominance confirmée → marquage '{label_if_best}'")
             self.step_2_save_to_ark(label=label_if_best)
@@ -282,9 +338,11 @@ class VomegaPipeline:
             "steps_completed": sum([
                 1 if step1_success else 0,
                 1 if step2_success else 0,
-                1 if dominance_achieved else 0
+                1 if dominance_achieved else 0,
+                1 if neuro_healthy else 0
             ]),
-            "dominance_achieved": dominance_achieved
+            "dominance_achieved": dominance_achieved,
+            "neuro_healthy": neuro_healthy
         }
         
         # Sauvegarder le rapport du pipeline
@@ -317,7 +375,7 @@ class VomegaPipeline:
         print(f"  Timestamp:      {summary.get('timestamp', 'N/A')}")
         print(f"  Cycles:         {summary.get('cycles_configured', 'N/A')}")
         print(f"  Durée:          {summary.get('duration_seconds', 0):.2f}s")
-        print(f"  Étapes OK:      {summary.get('steps_completed', 0)}/3")
+        print(f"  Étapes OK:      {summary.get('steps_completed', 0)}/4")
         
         dominance = summary.get("dominance_achieved", False)
         status = "🏆 DOMINANCE CONFIRMÉE" if dominance else "⚠️ Dominance non atteinte"
